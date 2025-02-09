@@ -1,5 +1,9 @@
 import os 
 os.system("pip install streamlit tensorflow numpy pillow")
+import sys
+import subprocess
+
+subprocess.check_call([sys.executable, "-m", "pip", "install", "tensorflow"])
 import streamlit as st
 import pickle
 import numpy as np

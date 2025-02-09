@@ -1,5 +1,5 @@
-pip install streamlit tensorflow numpy pillow
-
+import os 
+os.system("pip install streamlit tensorflow numpy pillow")
 import streamlit as st
 import pickle
 import numpy as np

@@ -1,5 +1,14 @@
-import os 
-#os.system("pip install streamlit tensorflow numpy pillow")
+import os
+
+# Function to install dependencies from requirements.txt
+def install_requirements():
+    os.system("pip install -r requirements.txt")
+
+# Install dependencies (optional, but will make sure everything is installed)
+install_requirements()
+
+
+import gdown  # To download files from Google Drive
 import streamlit as st
 import pickle
 import numpy as np
@@ -8,6 +17,23 @@ import tensorflow as tf
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.applications.vgg16 import VGG16, preprocess_input
 from tensorflow.keras.preprocessing.image import img_to_array
+
+
+
+# Download files from Google Drive without checking if they exist locally
+def download_file_from_google_drive(file_id, destination):
+    url = f"https://drive.google.com/uc?id={file_id}"
+    gdown.download(url, destination, quiet=False)
+
+
+
+# Google Drive file IDs for the models
+vgg16_features_file_id = '1vAhJUjCKhtYVRvmAZTnwovfbigZiUDEm'
+caption_model_file_id = '1Eix2lcbdrmow_Andf7LyDdNZyKW1YHew'
+
+# Download the model files from Google Drive
+download_file_from_google_drive(vgg16_features_file_id, 'vgg16_features.pkl')
+download_file_from_google_drive(caption_model_file_id, 'caption_model.h5')
 
 # Load the saved model and tokenizer
 @st.cache_resource

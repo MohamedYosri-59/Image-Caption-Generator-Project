@@ -49,15 +49,15 @@ class CustomLayer(tf.keras.layers.Layer):
         return tf.keras.backend.not_equal(x, y)
 
 # Define the custom layer if it's not already defined
-def NotEqual(x):
+#def NotEqual(x):
     #return tf.keras.backend.not_equal(x[0], x[1])
-    return tf.keras.backend.not_equal(x, y)
+    #return tf.keras.backend.not_equal(x, y)
 
 
 # Load the saved model and tokenizer
 @st.cache_resource
 def load_caption_model():
-    with custom_object_scope({'NotEqual': NotEqual}):
+    with custom_object_scope({'CustomLayer': CustomLayer}):
       return tf.keras.models.load_model("caption_model.h5")
 
 @st.cache_data

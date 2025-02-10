@@ -54,7 +54,7 @@ class NotEqual(tf.keras.layers.Layer):
 @st.cache_resource
 def load_caption_model():
     with custom_object_scope({'NotEqual': NotEqual}):
-      return tf.keras.models.load_model("caption_model.h5")
+       return tf.keras.models.load_model("caption_model.h5")
 
 @st.cache_data
 def load_tokenizer():
@@ -90,6 +90,12 @@ def generate_caption(model, tokenizer, photo, max_length):
         # Ensure inputs are numpy arrays
         photo = np.array(photo)  # Image features
         sequence = np.array(sequence)  # Text sequence
+        # Debug: Print shapes and types
+        print("Photo shape:", photo.shape)
+        print("Sequence shape:", sequence.shape)
+        print("Photo type:", type(photo))
+        print("Sequence type:", type(sequence))
+        
         yhat = model.predict([photo, sequence], verbose=0)
         yhat = np.argmax(yhat)
         word = tokenizer.index_word.get(yhat, None)

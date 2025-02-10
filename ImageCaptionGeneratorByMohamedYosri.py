@@ -20,7 +20,7 @@ import tensorflow as tf
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.applications.vgg16 import VGG16, preprocess_input
 from tensorflow.keras.preprocessing.image import img_to_array
-from tensorflow.keras.utils import custom_object_scope
+#from tensorflow.keras.utils import custom_object_scope
 import gdown  # To download files from Google Drive
 
 
@@ -38,27 +38,10 @@ caption_model_file_id = '1Eix2lcbdrmow_Andf7LyDdNZyKW1YHew'
 download_file_from_google_drive(vgg16_features_file_id, 'vgg16_features.pkl')
 download_file_from_google_drive(caption_model_file_id, 'caption_model.h5')
 
-# Define the custom layer
-class NotEqual(tf.keras.layers.Layer):
-    def __init__(self, **kwargs):
-        super(NotEqual, self).__init__(**kwargs)
-
-    def call(self, inputs):
-        x, y = inputs  # Ensure inputs are tensors
-        return tf.keras.backend.not_equal(x, y)
-
 # Load the saved model and tokenizer
 @st.cache_resource
 def load_caption_model():
-    try:
-        with custom_object_scope({'NotEqual': NotEqual}):
-            print("Loading model with custom layer 'NotEqual'...")  # Debug: Print message
-            model = tf.keras.models.load_model("caption_model.h5")
-            print("Model loaded successfully!")  # Debug: Print success message
-            return model
-    except Exception as e:
-        print(f"Error loading model: {e}")  # Debug: Print error message
-        raise e
+    return tf.keras.models.load_model("caption_model.h5")
 
 @st.cache_data
 def load_tokenizer():
@@ -86,7 +69,7 @@ def extract_features(image, model):
     return feature.flatten().reshape(1, -1)
 
 # Function to generate a caption
-def generate_caption(model, tokenizer, photo, max_length):
+def generate_caption(model, tokenizer, feature, max_length):
     in_text = "startseq"
     for _ in range(max_length):
         # Tokenize the input text
@@ -97,18 +80,9 @@ def generate_caption(model, tokenizer, photo, max_length):
         sequence = pad_sequences([sequence], maxlen=max_length, padding='post')
         print(f"Padded sequence: {sequence}")  # Debug: Print padded sequence
         
-        # Ensure inputs are numpy arrays
-        photo = np.array(photo, dtype=np.float32)  # Image features
-        sequence = np.array(sequence, dtype=np.int32)  # Text sequence
-        
-        # Debug: Print shapes and types
-        print("Photo shape:", photo.shape)  # Should be (1, 4096)
-        print("Sequence shape:", sequence.shape)  # Should be (1, max_length)
-        print("Photo type:", type(photo))  # Should be numpy.ndarray
-        print("Sequence type:", type(sequence))  # Should be numpy.ndarray
         
         # Predict the next word
-        yhat = model.predict([photo, sequence], verbose=0)
+        yhat = model.predict([feature, sequence], verbose=0)
         yhat = np.argmax(yhat)
         
         # Convert the predicted word index to a word

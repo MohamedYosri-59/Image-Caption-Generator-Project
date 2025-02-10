@@ -47,8 +47,6 @@ def NotEqual(x):
 # Load the saved model and tokenizer
 @st.cache_resource
 def load_caption_model():
-    # Register the custom layer when loading the model
-    with custom_object_scope({'NotEqual': tf.keras.backend.not_equal}):
       return tf.keras.models.load_model("caption_model.h5")
 
 @st.cache_data

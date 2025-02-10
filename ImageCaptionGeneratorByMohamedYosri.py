@@ -12,7 +12,6 @@ import os
 #os.system("pip install --user gdown")
 
 
-import gdown  # To download files from Google Drive
 import streamlit as st
 import pickle
 import numpy as np
@@ -21,6 +20,7 @@ import tensorflow as tf
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.applications.vgg16 import VGG16, preprocess_input
 from tensorflow.keras.preprocessing.image import img_to_array
+import gdown  # To download files from Google Drive
 
 
 

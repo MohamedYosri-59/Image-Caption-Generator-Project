@@ -1,5 +1,5 @@
 import os 
-os.system("pip install streamlit tensorflow numpy pillow")
+#os.system("pip install streamlit tensorflow numpy pillow")
 import streamlit as st
 import pickle
 import numpy as np
@@ -76,6 +76,6 @@ if uploaded_image is not None:
         feature = extract_features(image, vgg_model)
 
         # Generate and display caption
-        caption = generate_caption(caption_model, tokenizer, feature, max_length=5)
+        caption = generate_caption(caption_model, tokenizer, feature, max_length=7)
         st.subheader("Generated Caption:")
         st.write(caption)

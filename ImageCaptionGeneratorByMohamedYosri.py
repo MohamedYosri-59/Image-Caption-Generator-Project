@@ -1,5 +1,5 @@
 import os
-os.system("pip install gdown")
+os.system("pip install --user gdown")
 
 # Function to install dependencies from requirements.txt
 def install_requirements():

@@ -1,15 +1,15 @@
 import os
 
-os.system("pip install --upgrade pip")
+#os.system("pip install --upgrade pip")
 
 # Function to install dependencies from requirements.txt
-def install_requirements():
-    os.system("pip install -r requirements.txt")
+#def install_requirements():
+ #   os.system("pip install -r requirements.txt")
 
 # Install dependencies (optional, but will make sure everything is installed)
-install_requirements()
+#install_requirements()
 
-os.system("pip install --user gdown")
+#os.system("pip install --user gdown")
 
 
 import gdown  # To download files from Google Drive

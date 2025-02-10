@@ -20,7 +20,7 @@ import tensorflow as tf
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.applications.vgg16 import VGG16, preprocess_input
 from tensorflow.keras.preprocessing.image import img_to_array
-from tensorflow.keras.utils import custom_object_scope
+#from tensorflow.keras.utils import custom_object_scope
 import gdown  # To download files from Google Drive
 
 
@@ -30,8 +30,6 @@ def download_file_from_google_drive(file_id, destination):
     url = f"https://drive.google.com/uc?id={file_id}"
     gdown.download(url, destination, quiet=False)
 
-
-
 # Google Drive file IDs for the models
 vgg16_features_file_id = '1vAhJUjCKhtYVRvmAZTnwovfbigZiUDEm'
 caption_model_file_id = '1Eix2lcbdrmow_Andf7LyDdNZyKW1YHew'
@@ -40,21 +38,10 @@ caption_model_file_id = '1Eix2lcbdrmow_Andf7LyDdNZyKW1YHew'
 download_file_from_google_drive(vgg16_features_file_id, 'vgg16_features.pkl')
 download_file_from_google_drive(caption_model_file_id, 'caption_model.h5')
 
-class NotEqual(tf.keras.layers.Layer):
-    def __init__(self, **kwargs):
-        super(NotEqual, self).__init__(**kwargs)
-
-    def call(self, inputs):
-        x, y = inputs
-        return tf.keras.backend.not_equal(x, y)
-
-
-
 # Load the saved model and tokenizer
 @st.cache_resource
 def load_caption_model():
-    with custom_object_scope({'NotEqual': NotEqual}):
-       return tf.keras.models.load_model("caption_model.h5")
+    return tf.keras.models.load_model("caption_model.h5")
 
 @st.cache_data
 def load_tokenizer():
@@ -85,19 +72,20 @@ def extract_features(image, model):
 def generate_caption(model, tokenizer, photo, max_length):
     in_text = "startseq"
     for _ in range(max_length):
+        # Tokenize the input text
         sequence = tokenizer.texts_to_sequences([in_text])[0]
+        # Pad the sequence to the fixed length
         sequence = pad_sequences([sequence], maxlen=max_length, padding='post')
-        # Ensure inputs are numpy arrays
-        photo = np.array(photo)  # Image features
-        sequence = np.array(sequence)  # Text sequence
-        # Debug: Print shapes and types
-        print("Photo shape:", photo.shape)
-        print("Sequence shape:", sequence.shape)
-        print("Photo type:", type(photo))
-        print("Sequence type:", type(sequence))
         
+        # Ensure inputs are numpy arrays
+        photo = np.array(photo, dtype=np.float32)  # Image features
+        sequence = np.array(sequence, dtype=np.int32)  # Text sequence
+        
+        # Predict the next word
         yhat = model.predict([photo, sequence], verbose=0)
         yhat = np.argmax(yhat)
+        
+        # Convert the predicted word index to a word
         word = tokenizer.index_word.get(yhat, None)
         if word is None:
             break

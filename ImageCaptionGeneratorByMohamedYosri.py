@@ -40,6 +40,14 @@ caption_model_file_id = '1Eix2lcbdrmow_Andf7LyDdNZyKW1YHew'
 download_file_from_google_drive(vgg16_features_file_id, 'vgg16_features.pkl')
 download_file_from_google_drive(caption_model_file_id, 'caption_model.h5')
 
+class CustomLayer(tf.keras.layers.Layer):
+    def __init__(self, **kwargs):
+        super(CustomLayer, self).__init__(**kwargs)
+
+    def call(self, inputs):
+        x, y = inputs
+        return tf.keras.backend.not_equal(x, y)
+
 # Define the custom layer if it's not already defined
 def NotEqual(x):
     return tf.keras.backend.not_equal(x[0], x[1])
@@ -47,6 +55,7 @@ def NotEqual(x):
 # Load the saved model and tokenizer
 @st.cache_resource
 def load_caption_model():
+    with custom_object_scope({'NotEqual': NotEqual}):
       return tf.keras.models.load_model("caption_model.h5")
 
 @st.cache_data

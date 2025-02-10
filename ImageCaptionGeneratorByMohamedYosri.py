@@ -57,7 +57,6 @@ class CustomLayer(tf.keras.layers.Layer):
 # Load the saved model and tokenizer
 @st.cache_resource
 def load_caption_model():
-    with custom_object_scope({'NotEqual': NotEqual}):
       return tf.keras.models.load_model("caption_model.h5")
 
 @st.cache_data

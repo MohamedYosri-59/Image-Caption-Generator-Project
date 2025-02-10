@@ -2,12 +2,12 @@ import os
 
 #os.system("pip install --upgrade pip")
 
-# Function to install dependencies from requirements.txt
-#def install_requirements():
- #   os.system("pip install -r requirements.txt")
+#Function to install dependencies from requirements.txt
+def install_requirements():
+    os.system("pip install -r requirements.txt")
 
 # Install dependencies (optional, but will make sure everything is installed)
-#install_requirements()
+install_requirements()
 
 #os.system("pip install --user gdown")
 

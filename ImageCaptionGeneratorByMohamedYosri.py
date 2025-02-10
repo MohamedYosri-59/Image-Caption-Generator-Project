@@ -91,6 +91,13 @@ def generate_caption(model, tokenizer, photo, max_length):
         photo = np.array(photo, dtype=np.float32)  # Image features
         sequence = np.array(sequence, dtype=np.int32)  # Text sequence
         
+        # Debug: Print shapes and types
+        print("Photo shape:", photo.shape)  # Should be (1, 4096)
+        print("Sequence shape:", sequence.shape)  # Should be (1, max_length)
+        print("Photo type:", type(photo))  # Should be numpy.ndarray
+        print("Sequence type:", type(sequence))  # Should be numpy.ndarray
+
+        
         # Predict the next word
         yhat = model.predict([photo, sequence], verbose=0)
         yhat = np.argmax(yhat)

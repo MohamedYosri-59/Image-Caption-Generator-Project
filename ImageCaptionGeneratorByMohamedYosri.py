@@ -50,8 +50,15 @@ class NotEqual(tf.keras.layers.Layer):
 # Load the saved model and tokenizer
 @st.cache_resource
 def load_caption_model():
-    with custom_object_scope({'NotEqual': NotEqual}):
-        return tf.keras.models.load_model("caption_model.h5")
+    try:
+        with custom_object_scope({'NotEqual': NotEqual}):
+            print("Loading model with custom layer 'NotEqual'...")  # Debug: Print message
+            model = tf.keras.models.load_model("caption_model.h5")
+            print("Model loaded successfully!")  # Debug: Print success message
+            return model
+    except Exception as e:
+        print(f"Error loading model: {e}")  # Debug: Print error message
+        raise e
 
 @st.cache_data
 def load_tokenizer():
@@ -84,8 +91,11 @@ def generate_caption(model, tokenizer, photo, max_length):
     for _ in range(max_length):
         # Tokenize the input text
         sequence = tokenizer.texts_to_sequences([in_text])[0]
+        print(f"Tokenized sequence: {sequence}")  # Debug: Print tokenized sequence
+        
         # Pad the sequence to the fixed length
         sequence = pad_sequences([sequence], maxlen=max_length, padding='post')
+        print(f"Padded sequence: {sequence}")  # Debug: Print padded sequence
         
         # Ensure inputs are numpy arrays
         photo = np.array(photo, dtype=np.float32)  # Image features
@@ -96,7 +106,6 @@ def generate_caption(model, tokenizer, photo, max_length):
         print("Sequence shape:", sequence.shape)  # Should be (1, max_length)
         print("Photo type:", type(photo))  # Should be numpy.ndarray
         print("Sequence type:", type(sequence))  # Should be numpy.ndarray
-
         
         # Predict the next word
         yhat = model.predict([photo, sequence], verbose=0)

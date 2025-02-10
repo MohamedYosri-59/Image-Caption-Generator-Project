@@ -50,7 +50,9 @@ class CustomLayer(tf.keras.layers.Layer):
 
 # Define the custom layer if it's not already defined
 def NotEqual(x):
-    return tf.keras.backend.not_equal(x[0], x[1])
+    #return tf.keras.backend.not_equal(x[0], x[1])
+    return tf.keras.backend.not_equal(x, y)
+
 
 # Load the saved model and tokenizer
 @st.cache_resource

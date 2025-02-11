@@ -26,6 +26,7 @@ from collections import OrderedDict
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, Dense, Dropout, Embedding, LSTM
 from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.utils import to_categorical
 
 
 # Download files from Google Drive without checking if they exist locally

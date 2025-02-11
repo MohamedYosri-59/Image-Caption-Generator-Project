@@ -56,8 +56,13 @@ def load_captions(filepath):
 # Load captions
 dataset_captions = load_captions("Flickr8k.token.txt")  # Load captions from dataset
 
-features_dict = 'vgg16_features.pkl'
-features_dict=Flatten()(features_dict)
+@st.cache_data
+def load_features():
+    with open("vgg16_features.pkl", "rb") as file:
+        return pickle.load(file)
+
+features_dict = load_features()
+
 @st.cache_data
 def load_tokenizer():
     with open("tokenizer.pkl", "rb") as file:

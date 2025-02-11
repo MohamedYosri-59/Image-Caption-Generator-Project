@@ -3,3 +3,4 @@ tensorflow==2.18.0
 gdown
 numpy
 pillow
+pickle-mixin

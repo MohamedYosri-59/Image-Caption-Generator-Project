@@ -61,6 +61,8 @@ def load_tokenizer():
     with open("tokenizer.pkl", "rb") as file:
         return pickle.load(file)
 
+tokenizer = load_tokenizer()
+
 vocab_size = len(tokenizer.word_index) + 1  # Define vocabulary size
 
 @st.cache_data
@@ -68,11 +70,15 @@ def load_max_length():
     with open("max_length.pkl", "rb") as file:
         return pickle.load(file)
 
+max_length = load_max_length()
+
 # Load VGG16 model for feature extraction
 @st.cache_resource
 def load_vgg16():
     model = VGG16(weights="imagenet")
     return tf.keras.models.Model(inputs=model.input, outputs=model.layers[-2].output)
+
+vgg_model = load_vgg16()
 
 def create_sequences(tokenizer, max_length, dataset_captions, features_dict, vocab_size):
     X1, X2, y = [], [], []

@@ -54,7 +54,7 @@ def load_captions(filepath):
 # Load captions
 dataset_captions = load_captions("Flickr8k.token.txt")  # Load captions from dataset
 
-features_dict = vgg16_features
+features_dict = 'vgg16_features.pkl'
 
 @st.cache_data
 def load_tokenizer():

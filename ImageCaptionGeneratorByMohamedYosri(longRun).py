@@ -23,7 +23,9 @@ from tensorflow.keras.preprocessing.image import img_to_array
 #from tensorflow.keras.utils import custom_object_scope
 import gdown  # To download files from Google Drive
 from collections import OrderedDict
-
+from tensorflow.keras.models import Model
+from tensorflow.keras.layers import Input, Dense, Dropout, Embedding, LSTM
+from tensorflow.keras.optimizers import Adam
 
 
 # Download files from Google Drive without checking if they exist locally

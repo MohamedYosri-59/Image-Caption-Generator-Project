@@ -4,4 +4,3 @@ gdown
 numpy
 pillow
 pickle-mixin
-string

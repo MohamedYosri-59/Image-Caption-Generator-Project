@@ -36,11 +36,11 @@ def download_file_from_google_drive(file_id, destination):
 
 # Google Drive file IDs for the models
 vgg16_features_file_id = '1vAhJUjCKhtYVRvmAZTnwovfbigZiUDEm'
-#caption_model_file_id = '1Eix2lcbdrmow_Andf7LyDdNZyKW1YHew'
+caption_model_weights_file_id = '1f9R6g_DX6TWVGmo_asvOfZbjRlyMug8E'
 
 # Download the model files from Google Drive
 download_file_from_google_drive(vgg16_features_file_id, 'vgg16_features.pkl')
-#download_file_from_google_drive(caption_model_file_id, 'caption_model.h5')
+download_file_from_google_drive(caption_model_weights_file_id, 'caption_model_weights.weights.h5')
 
 def load_captions(filepath):
     captions = {}  # Dictionary to store captions
@@ -88,34 +88,6 @@ def load_vgg16():
 
 vgg_model = load_vgg16()
 
-def create_sequences(tokenizer, max_length, dataset_captions, features_dict, vocab_size):
-    X1, X2, y = [], [], []
-
-    for img_id, captions in dataset_captions.items():
-        if img_id not in features_dict:
-            print(f"Skipping {img_id}, feature not found!")  # Debug missing features
-            continue
-
-        feature = features_dict[img_id]  # Load precomputed feature
-        print(f"Processing {img_id}, Feature Shape: {feature.shape}")  # Debugging step
-
-        for caption in captions:
-            seq = tokenizer.texts_to_sequences([caption])[0]
-            for i in range(1, len(seq)):
-                in_seq, out_word = seq[:i], seq[i]
-
-                in_seq = pad_sequences([in_seq], maxlen=max_length)[0]  # Pad sequence
-                out_word = to_categorical([out_word], num_classes=vocab_size)[0]  # One-hot encode
-
-                X1.append(feature)  # Image feature
-                X2.append(in_seq)   # Text input
-                y.append(out_word)  # Next word
-
-    print(f"Total Samples: {len(X1)}")  # Debugging step
-    return np.array(X1), np.array(X2), np.array(y)
-
-# Generate Training Data
-X1_train, X2_train, y_train = create_sequences(tokenizer, max_length, dataset_captions, features_dict, vocab_size)
 
 # Function to build captioning model
 def build_model(vocab_size, max_length):
@@ -132,14 +104,14 @@ def build_model(vocab_size, max_length):
     outputs = Dense(vocab_size, activation='softmax')(decoder)  # Output layer
 
     model = Model(inputs=[inputs, text_input], outputs=outputs)  # Define model
-    optimizer = Adam(learning_rate=0.001)
+    optimizer = Adam(learning_rate=0.0001)
     model.compile(loss='categorical_crossentropy', optimizer=optimizer)  # Compile model
     return model  # Return compiled model
 
 # Build model
 caption_model = build_model(vocab_size, max_length)  # Create captioning model
-# Train the model
-caption_model.fit([X1_train, X2_train], y_train, epochs=1, batch_size=64, verbose=1)
+# Load previously saved weights
+caption_model.load_weights("caption_model_weights.weights.h5")
 
 # Function to extract features from an image
 def extract_features(image, model):
@@ -196,6 +168,6 @@ if uploaded_image is not None:
         feature = extract_features(image, vgg_model)
 
         # Generate and display caption
-        caption = generate_caption(caption_model, tokenizer, feature, max_length=5)
+        caption = generate_caption(caption_model, tokenizer, feature, max_length)
         st.subheader("Generated Caption:")
         st.write(caption)

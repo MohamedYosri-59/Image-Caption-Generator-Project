@@ -8,4 +8,4 @@ this project is made as the final assignment project for an AI Diploma held by A
 6- the file 'pseudocode.docx' explains the code further<br>
 7- the file 'Image Caption Generator (Final Project).pptx' provides a less detailed code explanation, a simple useful introduction about image caption generators in general, and screenshots of the model output from different images either on vs code or the streamlit app<br>
 important note: model accuracy could have been much better but i had two major issues : 1- google colab was always getting disconnected due to dialy quota consumption, 2- VS code was storing temporary data on my pc during run so i had to reduce number of training epochs to 2 only.<br> 
-Streamlit application link: https://image-caption-generator-project-by-mohamed-yosri.streamlit.app/ 
+Streamlit application link:  

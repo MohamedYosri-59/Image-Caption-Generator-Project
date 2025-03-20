@@ -1,5 +1,5 @@
 # Image-Caption-Generator-Project
-programming language used: Python
+programming language used: Python<br>
 this project is made as the final assignment project for an AI Diploma held by Array academy<br>
 1- used dataset: Flickr8k dataset which can be found easily on kaggle (couldn't upload it here due to upload size restriction)<br>
 2- the aim is to make a streamlit application that generates captions for images<br>
